@@ -13,6 +13,7 @@ function App () {
     <Router>
       <div>
         <Switch>
+          <Route path='/' children={<List />} />
           <Route path='/details/:country' children={<List />} />
           <Route path='/history/:country' children={<List />} />
         </Switch>
