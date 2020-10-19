@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useRouteMatch } from 'react-router-dom';
 import useSummary from './useSummary';
+import Grid from './Grid';
 
 function List () {
   const { path, url } = useRouteMatch();
@@ -18,6 +19,7 @@ function List () {
       <div>
         Global stats data
       </div>
+      <Grid summary={summary} />
     </div>
   );
 }

@@ -5,8 +5,8 @@ import {
 } from '../actionTypes';
 
 const initState = {
-  summery: [],
-  summeryFetching: false,
+  summary: [],
+  summaryFetching: false,
   error: ''
 };
 
@@ -16,16 +16,16 @@ export default function (state = initState, action) {
   const actions = {
     [SUMMARY_LIST_REQUESTED]: {
       ...state,
-      summeryFetching: true
+      summaryFetching: true
     },
     [SUMMARY_LIST_SUCCESS]: {
       ...state,
-      summeryFetching: false,
-      summery: payload
+      summaryFetching: false,
+      summary: payload
     },
     [SUMMARY_LIST_FAILURE]: {
       ...state,
-      summeryFetching: false,
+      summaryFetching: false,
       error: payload
     }
   };
