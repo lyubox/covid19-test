@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useRouteMatch } from 'react-router-dom';
 import useSummary from './useSummary';
-import Grid from './Grid';
+import Grid from '../grid/Grid';
 
 function List () {
   const { path, url } = useRouteMatch();

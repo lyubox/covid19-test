@@ -1,0 +1,12 @@
+.selectedRow {
+  background-color: #F0F8FF;
+  border-bottom: solid thin blue
+}
+.row {
+  border: solid thin white;
+  cursor: pointer
+}
+.table {
+  border: solid thin white;
+  border-collapse: collapse
+}

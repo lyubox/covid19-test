@@ -1,11 +1,12 @@
 import React from 'react';
+import './App.css';
 import {
   BrowserRouter as Router,
   Route,
   Link,
   Switch
 } from 'react-router-dom';
-import List from './List';
+import List from './components/list/List';
 // import './App.css';
 
 function App () {
