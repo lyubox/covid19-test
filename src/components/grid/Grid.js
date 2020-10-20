@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import './Grid.css';
 import { isNil, isEmpty, prop } from 'ramda';
 import { Link, useHistory } from 'react-router-dom';
@@ -11,12 +11,11 @@ const columns = {
   NewRecovered: 'New Recovered'
 };
 
-function Row ({ data, selected, onClick }) {
+function Row ({ data, onClick }) {
   const slug = data.Slug;
   const [country, ...rest] = Object.keys(columns);
   return (
     <tr
-      className={selected ? 'selectedRow' : 'row'}
       onClick={onClick}
     >
       <td>
@@ -33,8 +32,6 @@ export default function Grid ({
   summary
 }) {
   const [query, setQuery] = useState('');
-  // -1 means not selected
-  const [selected, setSelected] = useState(-1);
 
   const history = useHistory();
 
@@ -49,60 +46,16 @@ export default function Grid ({
   const filteredList = useMemo(() => {
     if (isNil(fuse) || isEmpty(query)) return summary;
 
-    // if no key has been pressed, no need to set it up, otherwise reset it to 0
-    setSelected(old => old === -1 ? -1 : 0);
-
     return fuse.search(query).map(prop('item'));
   }, [query, summary]);
 
   const handleClick = useCallback((index, slug) => () => {
-  //  history.push(`/details/${slug}`);
-    setSelected(index);
+    history.push(`/details/${slug}`);
   }, []);
 
   const handleSearch = useCallback(e => {
     setQuery(e.target.value);
   }, []);
-
-  const handleKeyPress = useCallback(e => {
-    const { key } = e;
-
-    const actions = {
-      ArrowUp: () => setSelected(oldSelected =>
-        oldSelected <= 0
-          ? 0
-          : oldSelected - 1
-      ),
-      ArrowDown: () => setSelected(oldSelected =>
-        oldSelected === filteredList.length - 1 && oldSelected !== -1
-          ? oldSelected
-          : oldSelected + 1
-      ),
-      Enter: () => history.push(`/history/${filteredList[selected]?.Slug}`)
-    };
-
-    if (key === 'ArrowUp' || key === 'ArrowDown') e.preventDefault();
-
-    const actionFn = actions[key];
-
-    if (!isNil(actionFn)) actionFn();
-  }, [filteredList, selected]);
-
-  useEffect(() => {
-    if (isEmpty(filteredList)) return;
-
-    const curr = filteredList[selected];
-
-    if (!isNil(curr?.Slug)) {
-      history.push(`/details/${curr?.Slug}`);
-    }
-  }, [selected, filteredList]);
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyPress);
-    // clean up
-    return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [filteredList, selected]);
 
   return (
     <>
@@ -118,9 +71,8 @@ export default function Grid ({
             data={row}
             key={index}
             onClick={handleClick(index, row.Slug)}
-            selected={index === selected}
-          />
-          ))}
+          />)
+        )}
       </table>
     </>
   );
