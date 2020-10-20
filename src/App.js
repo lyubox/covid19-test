@@ -3,7 +3,6 @@ import './App.css';
 import {
   BrowserRouter as Router,
   Route,
-  Link,
   Switch
 } from 'react-router-dom';
 import List from './components/list/List';
@@ -14,7 +13,7 @@ function App () {
     <Router>
       <div>
         <Switch>
-          <Route path='/' children={<List />} />
+          <Route exact path='/' children={<List />} />
           <Route path='/details/:country' children={<List />} />
           <Route path='/history/:country' children={<List />} />
         </Switch>

@@ -1,23 +1,30 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import './Grid.css';
 import { isNil, isEmpty, prop } from 'ramda';
+import { Link, useHistory } from 'react-router-dom';
 import Fuse from 'fuse.js';
 
 const columns = {
   Country: 'Country',
-  Date: 'Date',
   NewConfirmed: 'New Confirmed',
   NewDeaths: 'New Deaths',
   NewRecovered: 'New Recovered'
 };
 
 function Row ({ data, selected, onClick }) {
+  const slug = data.Slug;
+  const [country, ...rest] = Object.keys(columns);
   return (
     <tr
       className={selected ? 'selectedRow' : 'row'}
       onClick={onClick}
     >
-      {Object.keys(columns).map((column, index) => <td key={index}>{data[column] || ''}</td>)}
+      <td>
+        <Link to={`/details/${slug}`}>
+          {data[country]}
+        </Link>
+      </td>
+      {rest.map((column, index) => <td key={index}>{data[column] || ''}</td>)}
     </tr>
   );
 }
@@ -28,6 +35,8 @@ export default function Grid ({
   const [query, setQuery] = useState('');
   // -1 means not selected
   const [selected, setSelected] = useState(-1);
+
+  const history = useHistory();
 
   const fuse = useMemo(() => {
     return new Fuse(summary, {
@@ -47,16 +56,17 @@ export default function Grid ({
     return fuse.search(query).map(prop('item'));
   }, [query, summary]);
 
-  const handleClick = useCallback(index => () => {
+  const handleClick = useCallback((index, slug) => () => {
+  //  history.push(`/details/${slug}`);
     setSelected(index);
   }, []);
+
   const handleSearch = useCallback(e => {
     setQuery(e.target.value);
   }, []);
 
   const handleKeyPress = useCallback(e => {
     const { key } = e;
-    console.log({ selected });
 
     const actions = {
       ArrowUp: () => setSelected(oldSelected =>
@@ -64,27 +74,35 @@ export default function Grid ({
           ? 0
           : oldSelected - 1
       ),
-      ArrowDown: () => setSelected(oldSelected => {
-        console.log(oldSelected, filteredList);
-
-        return oldSelected === filteredList.length - 1 && oldSelected !== -1
+      ArrowDown: () => setSelected(oldSelected =>
+        oldSelected === filteredList.length - 1 && oldSelected !== -1
           ? oldSelected
-          : oldSelected + 1;
-      }
+          : oldSelected + 1
       )
     };
 
     if (key === 'ArrowUp' || key === 'ArrowDown') e.preventDefault();
 
     const actionFn = actions[key];
+
     if (!isNil(actionFn)) actionFn();
-  }, [filteredList.length]);
+  }, [filteredList]);
+
+  useEffect(() => {
+    if (isEmpty(filteredList)) return;
+
+    const curr = filteredList[selected];
+
+    if (!isNil(curr?.Slug)) {
+      history.push(`/details/${curr?.Slug}`);
+    }
+  }, [selected, filteredList]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress);
     // clean up
     return () => document.removeEventListener('keydown', handleKeyPress);
-  }, []);
+  }, [filteredList]);
 
   console.log({ filteredList });
   console.log({ selected });
@@ -98,7 +116,14 @@ export default function Grid ({
         <tr>
           {Object.entries(columns).map(([key, name]) => (<th key={key}>{name}</th>))}
         </tr>
-        {filteredList.map((row, index) => (<Row data={row} key={index} onClick={handleClick(index)} selected={index === selected} />))}
+        {filteredList.map((row, index) =>
+          (<Row
+            data={row}
+            key={index}
+            onClick={handleClick(index, row.Slug)}
+            selected={index === selected}
+          />
+          ))}
       </table>
     </>
   );
