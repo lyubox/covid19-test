@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { isNil } from 'ramda';
 
 const toDisplayName = (str = '') => {
   const [first, ...rest] = str;
-  console.log({ rest });
 
   const restWithSpaces = rest
     .reduce((res, letter) =>
@@ -16,9 +16,16 @@ const toDisplayName = (str = '') => {
 };
 
 function Details ({ details, country }) {
+  const history = useHistory();
+
+  const handleClick = useCallback(e => {
+    history.push(`/history/${details.Slug}`);
+  }, [details]);
+
   if (isNil(details)) return null;
-  console.log({ details });
+
   const { Premium: _, ...fields } = details;
+
   return (
     <>
       {Object.entries(fields)
@@ -29,7 +36,7 @@ function Details ({ details, country }) {
           </div>
         )
         )}
-      <input type='button' value='history' />
+      <input type='button' value='history' onClick={handleClick} />
     </>
   );
 }

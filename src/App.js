@@ -14,8 +14,7 @@ function App () {
       <div>
         <Switch>
           <Route exact path='/' children={<List />} />
-          <Route path='/details/:country' children={<List />} />
-          <Route path='/history/:country' children={<List />} />
+          <Route path='/:module/:country' children={<List />} />
         </Switch>
       </div>
     </Router>

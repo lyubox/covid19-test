@@ -47,7 +47,6 @@ export default function Grid ({
 
   // debounce mechanism here is a good idea
   const filteredList = useMemo(() => {
-    console.log({ query });
     if (isNil(fuse) || isEmpty(query)) return summary;
 
     // if no key has been pressed, no need to set it up, otherwise reset it to 0
@@ -78,7 +77,8 @@ export default function Grid ({
         oldSelected === filteredList.length - 1 && oldSelected !== -1
           ? oldSelected
           : oldSelected + 1
-      )
+      ),
+      Enter: () => history.push(`/history/${filteredList[selected]?.Slug}`)
     };
 
     if (key === 'ArrowUp' || key === 'ArrowDown') e.preventDefault();
@@ -86,7 +86,7 @@ export default function Grid ({
     const actionFn = actions[key];
 
     if (!isNil(actionFn)) actionFn();
-  }, [filteredList]);
+  }, [filteredList, selected]);
 
   useEffect(() => {
     if (isEmpty(filteredList)) return;
@@ -102,10 +102,7 @@ export default function Grid ({
     document.addEventListener('keydown', handleKeyPress);
     // clean up
     return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [filteredList]);
-
-  console.log({ filteredList });
-  console.log({ selected });
+  }, [filteredList, selected]);
 
   return (
     <>

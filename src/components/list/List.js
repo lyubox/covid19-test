@@ -4,10 +4,11 @@ import { indexBy, prop } from 'ramda';
 import useSummary from './useSummary';
 import Grid from '../grid/Grid';
 import Details from '../details/Details';
+import History from '../history/History';
 
 function List () {
   const { path, url } = useRouteMatch();
-  const { country } = useParams();
+  const { module, country } = useParams();
 
   const { summary } = useSummary();
 
@@ -18,7 +19,8 @@ function List () {
   console.log({ path, url, country });
 
   // first element is empty
-  const [_, module] = path.split('/');
+  // const [_, module] = path.split('/');
+
   const showDetails = module === 'details' || module === 'history';
   const showHistory = module === 'history';
   console.log({ showDetails, module, split: path.split('/') });
@@ -32,6 +34,9 @@ function List () {
       <Grid summary={summary} />
       {showDetails
         ? <Details details={summaryBySlug[country]} />
+        : null}
+      {showHistory
+        ? <History />
         : null}
     </div>
   );
