@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import './Grid.css';
 import { isNil, isEmpty, prop } from 'ramda';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import Fuse from 'fuse.js';
 
 const columns = {
@@ -31,7 +31,12 @@ function Row ({ data, onClick }) {
 export default function Grid ({
   summary
 }) {
-  const [query, setQuery] = useState('');
+  // use query-string if it gets more complicated
+  const { search } = useLocation();
+  const [_, q] = search.split('=');
+  // end query-string need
+
+  const [query, setQuery] = useState(q || '');
 
   const history = useHistory();
 
@@ -49,8 +54,8 @@ export default function Grid ({
     return fuse.search(query).map(prop('item'));
   }, [query, summary]);
 
-  const handleClick = useCallback((index, slug) => () => {
-    history.push(`/details/${slug}`);
+  const handleClick = useCallback((index, slug, query) => () => {
+    history.push(`/details/${slug}?q=${query}`);
   }, []);
 
   const handleSearch = useCallback(e => {
@@ -70,7 +75,7 @@ export default function Grid ({
           (<Row
             data={row}
             key={index}
-            onClick={handleClick(index, row.Slug)}
+            onClick={handleClick(index, row.Slug, query)}
           />)
         )}
       </table>
