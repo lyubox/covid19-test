@@ -1,8 +1,10 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import './Grid.css';
-import { isNil, sortBy, isEmpty, prop } from 'ramda';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { isNil, isEmpty, prop } from 'ramda';
+import { useHistory, useLocation } from 'react-router-dom';
+import Table from './Table';
 import Fuse from 'fuse.js';
+import { sortList } from '../../core';
 
 const columns = {
   Country: 'Country',
@@ -11,37 +13,12 @@ const columns = {
   NewRecovered: 'New Recovered'
 };
 
-function Row ({ data, onClick }) {
-  const slug = data.Slug;
-  const [country, ...rest] = Object.keys(columns);
-  return (
-    <tr
-      onClick={onClick}
-    >
-      <td className='leftAligned'>
-        {data[country]}
-      </td>
-      {rest.map((column, index) => <td className='rightAligned' key={index}>{data[column] || ''}</td>)}
-    </tr>
-  );
-}
-
-const sortList = ({ column, assending }, list = []) =>
-  assending
-    ? sortBy(prop(column))(list)
-    : sortBy(prop(column))(list).reverse();
-
-const sortSymbol = (column, sort) =>
-  column !== sort.column
-    ? ''
-    : sort.assending ? '▼' : '▲';
-
 export default function Grid ({
   summary
 }) {
   // use query-string if it gets more complicated
   const { search } = useLocation();
-  const [_, q] = search.split('=');
+  const [, q] = search.split('=');
   // end query-string need
 
   const [query, setQuery] = useState(q || '');
@@ -65,11 +42,11 @@ export default function Grid ({
       : fuse.search(query).map(prop('item'));
 
     return sortList(sort, newList);
-  }, [query, summary, sort]);
+  }, [query, summary, sort, fuse]);
 
   const handleClick = useCallback((index, slug, query) => () => {
     history.push(`/details/${slug}?q=${query}`);
-  }, []);
+  }, [history]);
 
   const handleSearch = useCallback(e => {
     setQuery(e.target.value);
@@ -89,6 +66,17 @@ export default function Grid ({
         <span>Search:</span>
         <input placeholder='Search for country' autoFocus onChange={handleSearch} type='text' value={query} />
       </div>
+      <Table
+        id='summary-table'
+        columns={columns}
+        list={filteredList}
+        slugField='Slug'
+        query={query}
+        onClick={handleClick}
+        onSort={handleSort}
+        sort={sort}
+      />
+      {/*
       <div id='table-wrapper'>
         <table id='table-header'>
           <thead>
@@ -119,6 +107,7 @@ export default function Grid ({
           </table>
         </div>
       </div>
+      */}
     </div>
   );
 }

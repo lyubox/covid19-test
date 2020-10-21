@@ -7,9 +7,8 @@ export default function useHistory () {
   const dispatch = useDispatch();
 
   const loadHistory = useCallback(country => {
-    console.log({ country });
     dispatch(loadHistoryAction(country));
-  }, []);
+  }, [dispatch]);
 
   const history = useSelector(historyState);
 

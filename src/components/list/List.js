@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { useParams, useRouteMatch } from 'react-router-dom';
-import { indexBy, prop } from 'ramda';
+import { useParams } from 'react-router-dom';
+import { indexBy, prop, isNil } from 'ramda';
 import useSummary from './useSummary';
 import Grid from '../grid/Grid';
 import Details from '../details/Details';
@@ -8,20 +8,15 @@ import History from '../history/History';
 import './List.css';
 
 function List () {
-  const { path, url } = useRouteMatch();
   const { module, country } = useParams();
 
-  const [isBtnClicked, setBtnClicked] = useState(false);
+  const [isBtnClicked, setBtnClicked] = useState(!isNil(module));
 
   const { summary } = useSummary();
 
   const summaryBySlug = useMemo(() =>
     indexBy(prop('Slug'))(summary)
   , [summary]);
-
-  console.log({ summary });
-
-  console.log({ path, url, country });
 
   // first element is empty
   // const [_, module] = path.split('/');
@@ -46,7 +41,7 @@ function List () {
           <Grid summary={summary} />
           <Details details={summaryBySlug[country]} />
           {showHistory &&
-            <History />}
+            <History slug={country} />}
         </div>}
     </div>
   );

@@ -1,17 +1,16 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadSummaryList } from '../../redux/actions';
-import { summaryList, summaryGlobal } from '../../redux/selectors';
+import { summaryList } from '../../redux/selectors';
 
 export default function useSummary () {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(loadSummaryList);
-  }, []);
+  }, [dispatch]);
 
   const summary = useSelector(summaryList);
-  // const globalSummary = useSelector(summaryGlobal);
 
   return {
     summary
