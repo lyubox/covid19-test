@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import './Grid.css';
-import { isNil, isEmpty, prop } from 'ramda';
+import { isNil, sortBy, isEmpty, prop } from 'ramda';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Fuse from 'fuse.js';
 
@@ -18,15 +18,23 @@ function Row ({ data, onClick }) {
     <tr
       onClick={onClick}
     >
-      <td>
-        <Link to={`/details/${slug}`}>
-          {data[country]}
-        </Link>
+      <td className='leftAligned'>
+        {data[country]}
       </td>
-      {rest.map((column, index) => <td key={index}>{data[column] || ''}</td>)}
+      {rest.map((column, index) => <td className='rightAligned' key={index}>{data[column] || ''}</td>)}
     </tr>
   );
 }
+
+const sortList = ({ column, assending }, list = []) =>
+  assending
+    ? sortBy(prop(column))(list)
+    : sortBy(prop(column))(list).reverse();
+
+const sortSymbol = (column, sort) =>
+  column !== sort.column
+    ? ''
+    : sort.assending ? '▼' : '▲';
 
 export default function Grid ({
   summary
@@ -37,6 +45,7 @@ export default function Grid ({
   // end query-string need
 
   const [query, setQuery] = useState(q || '');
+  const [sort, setSort] = useState({ column: 'Country', assending: true });
 
   const history = useHistory();
 
@@ -49,10 +58,14 @@ export default function Grid ({
 
   // debounce mechanism here is a good idea
   const filteredList = useMemo(() => {
-    if (isNil(fuse) || isEmpty(query)) return summary;
+    if (isNil(fuse)) return summary;
 
-    return fuse.search(query).map(prop('item'));
-  }, [query, summary]);
+    const newList = isEmpty(query)
+      ? summary
+      : fuse.search(query).map(prop('item'));
+
+    return sortList(sort, newList);
+  }, [query, summary, sort]);
 
   const handleClick = useCallback((index, slug, query) => () => {
     history.push(`/details/${slug}?q=${query}`);
@@ -62,23 +75,50 @@ export default function Grid ({
     setQuery(e.target.value);
   }, []);
 
+  const handleSort = useCallback(column => e => {
+    setSort(oldSort =>
+      column === oldSort.column
+        ? { column, assending: !oldSort.assending }
+        : { column, assending: true }
+    );
+  }, []);
+
   return (
-    <>
-      <div>
-        Search:<input plaseholder='Search for country' autoFocus onChange={handleSearch} type='text' value={query} />
+    <div id='grid'>
+      <div id='search'>
+        <span>Search:</span>
+        <input placeholder='Search for country' autoFocus onChange={handleSearch} type='text' value={query} />
       </div>
-      <table className='table'>
-        <tr>
-          {Object.entries(columns).map(([key, name]) => (<th key={key}>{name}</th>))}
-        </tr>
-        {filteredList.map((row, index) =>
-          (<Row
-            data={row}
-            key={index}
-            onClick={handleClick(index, row.Slug, query)}
-          />)
-        )}
-      </table>
-    </>
+      <div id='table-wrapper'>
+        <table id='table-header'>
+          <thead>
+            <tr>
+              {Object.entries(columns).map(([key, name]) =>
+                (<th
+                  className='headers'
+                  key={key}
+                  onClick={handleSort(key)}
+                >
+                  {name}
+                  {sortSymbol(key, sort)}
+                </th>))}
+            </tr>
+          </thead>
+        </table>
+        <div id='table-scroll'>
+          <table id='data'>
+            <tbody>
+              {filteredList.map((row, index) =>
+                (<Row
+                  data={row}
+                  key={index}
+                  onClick={handleClick(index, row.Slug, query)}
+                />)
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -1,13 +1,5 @@
 body {
+  overflow: hidden; /* Hide scrollbars */
   padding: 0
 }
 
-.header-button {
-  background-color: orangered;
-  color: white;
-  font-weight: bold;
-  font-size: 24px;
-  border: solid thin white;
-  border-radius: 5px;
-  padding: 18px 24px;
-}

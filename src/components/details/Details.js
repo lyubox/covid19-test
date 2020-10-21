@@ -1,6 +1,9 @@
 import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory as useReactRouterHistory } from 'react-router-dom';
 import { isNil } from 'ramda';
+import './Details.css';
+import { format } from 'date-fns';
+import useHistory from '../history/useHistory';
 
 const toDisplayName = (str = '') => {
   const [first, ...rest] = str;
@@ -15,29 +18,39 @@ const toDisplayName = (str = '') => {
   return [first, ...restWithSpaces].join('');
 };
 
+const dateFormat = 'PPpp';
+
 function Details ({ details, country }) {
-  const history = useHistory();
+  const browserHistory = useReactRouterHistory();
 
-  const handleClick = useCallback(e => {
-    history.push(`/history/${details.Slug}`);
-  }, [details]);
+  const { history, loadHistory } = useHistory();
+  console.log({ history });
 
-  if (isNil(details)) return null;
+  const handleClick = useCallback(slug => e => {
+    console.log({ slug });
+    loadHistory(slug);
+    browserHistory.push(`/history/${slug}`);
+  }, []);
 
-  const { Premium: _, ...fields } = details;
+  // We still want this for place holder
+  if (isNil(details)) return (<div id='details' />);
+
+  const { Premium: _, Country, ...fields } = details;
 
   return (
-    <>
+    <div id='details'>
+      <h1>Details</h1>
+      <h2>{Country}</h2>
       {Object.entries(fields)
         .map(([column, value], index) => (
-          <div key={index}>
-            <b>{toDisplayName(column)}:</b>
-            <span>{value}</span>
+          <div className='row-details' key={index}>
+            <span>{toDisplayName(column)}:</span>
+            <b>{column === 'Date' ? format(Date.parse(value), dateFormat) : value}</b>
           </div>
         )
         )}
-      <input type='button' value='history' onClick={handleClick} />
-    </>
+      <input id='history-button' type='button' value='history' onClick={handleClick(details.Slug)} />
+    </div>
   );
 }
 export default Details;

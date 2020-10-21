@@ -1,3 +1,30 @@
+#grid {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+#search {
+  margin: 20px;
+}
+#search span {
+  font-size: 18px;
+  font-weight: bold;
+  color: orangered;
+  padding: 10px;
+}
+#search input {
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px;
+  color: dimgray;
+  border: solid 2px orangered;
+}
+::placeholder {
+  color: lightgray
+}
+
 .selectedRow {
   background-color: #F0F8FF;
   border-bottom: solid thin blue
@@ -6,7 +33,73 @@
   border: solid thin white;
   cursor: pointer
 }
-.table {
-  border: solid thin white;
-  border-collapse: collapse
+.rightAligned {
+  text-align: right;
+  width: 20%;
+}
+.leftAligned {
+  width: 40%;
+  text-align: left;
+  font-weight: bold;
+}
+#table-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 550px;
+  position: relative;
+}
+#table-scroll {
+  height: 500px; 
+  overflow: auto;  
+  border: solid 4px coral;
+}
+#table-wrapper table {
+  width:100%;
+}
+#table-wrapper table thead {
+  width:100%;
+  height: 50px;
+  border:4px solid coral;
+}
+
+#data {
+  border-collapse: collapse;
+  cursor: pointer;
+  color: dimgray;
+}
+
+#data tr:hover {
+  background-color: lightsalmon;
+  color: white;
+}
+#data tbody tr:nth-child(odd) {
+  background-color: floralwhite;
+}
+#data tbody tr:nth-child(odd):hover {
+  background-color: lightsalmon;
+}
+#data th, td {
+  padding: 10px;
+}
+
+#table-header {
+  border: 4px solid coral;
+  border-collapse: collapse;
+}
+#table-header th {
+  width: 20%;
+}
+#table-header th:first-child {
+  width: 40%;
+}
+#table-header thead {
+  background-color: coral;
+  color: white;
+}
+#table-header th {
+  cursor: pointer;
+  padding: 15px;
+}
+#table-header th:hover {
+  color: aquamarine;
 }

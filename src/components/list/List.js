@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useParams, useRouteMatch } from 'react-router-dom';
 import { indexBy, prop } from 'ramda';
 import useSummary from './useSummary';
@@ -15,7 +15,9 @@ function List () {
 
   const { summary } = useSummary();
 
-  const summaryBySlug = indexBy(prop('Slug'))(summary);
+  const summaryBySlug = useMemo(() =>
+    indexBy(prop('Slug'))(summary)
+  , [summary]);
 
   console.log({ summary });
 
@@ -24,26 +26,28 @@ function List () {
   // first element is empty
   // const [_, module] = path.split('/');
 
-  const showDetails = module === 'details' || module === 'history';
   const showHistory = module === 'history';
-  console.log({ showDetails, module, split: path.split('/') });
+
+  const handleClick = useCallback(e => {
+    setBtnClicked(true);
+  }, []);
 
   return (
-    <div style={{ border: 'solid thin red' }}>
+    <div id='wrapper'>
       <div id='header'>
-        <h1>Welcom to Covid19 Stats</h1>
-        {!isBtnClicked &&
-          <div id='buttonContainer'>
-            <input className='header-button' type='button' value='Get Started' />
-          </div>}
+        <h1>Welcome to Covid19 Stats</h1>
       </div>
-      <Grid summary={summary} />
-      {showDetails
-        ? <Details details={summaryBySlug[country]} />
-        : null}
-      {showHistory
-        ? <History />
-        : null}
+      {!isBtnClicked &&
+        <div id='buttonContainer'>
+          <input id='header-button' type='button' value='Get Started' onClick={handleClick} />
+        </div>}
+      {isBtnClicked &&
+        <div id='list-wrapper'>
+          <Grid summary={summary} />
+          <Details details={summaryBySlug[country]} />
+          {showHistory &&
+            <History />}
+        </div>}
     </div>
   );
 }

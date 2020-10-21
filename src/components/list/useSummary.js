@@ -11,9 +11,7 @@ export default function useSummary () {
   }, []);
 
   const summary = useSelector(summaryList);
-  const globalSummary = useSelector(summaryGlobal);
-  console.log({ summary });
-  console.log({ globalSummary });
+  // const globalSummary = useSelector(summaryGlobal);
 
   return {
     summary

@@ -1,0 +1,28 @@
+#details {
+  margin: 70px;
+  width: 300px;
+  display: flex;
+  flex-direction: column; 
+  color: dimgray;
+}
+#details h1 {
+  color: silver;
+}
+.row-details {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+#history-button {
+  align-self: center;
+  display: block;
+  background-color: white;
+  color: orangered;
+  font-weight: bold;
+  font-size: 18px;
+  border: solid thin orangered;
+  border-radius: 3px;
+  padding: 12px 18px;
+  margin: 20px;
+}
