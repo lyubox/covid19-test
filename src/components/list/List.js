@@ -1,10 +1,11 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { indexBy, prop, isNil } from 'ramda';
 import useSummary from './useSummary';
 import Grid from '../grid/Grid';
 import Details from '../details/Details';
 import History from '../history/History';
+
 import './List.css';
 
 function List () {
@@ -13,6 +14,7 @@ function List () {
   const [isBtnClicked, setBtnClicked] = useState(!isNil(module));
 
   const { summary } = useSummary();
+  const { history } = useHistory();
 
   const summaryBySlug = useMemo(() =>
     indexBy(prop('Slug'))(summary)
@@ -39,9 +41,15 @@ function List () {
       {isBtnClicked &&
         <div id='list-wrapper'>
           <Grid summary={summary} />
-          <Details details={summaryBySlug[country]} />
+          <Details
+            details={summaryBySlug[country]}
+            history={history}
+          />
           {showHistory &&
-            <History slug={country} />}
+            <History
+              slug={country}
+              history={history}
+            />}
         </div>}
     </div>
   );

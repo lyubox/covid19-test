@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useHistory as useReactRouterHistory } from 'react-router-dom';
 import './History.css';
 import useHistory from './useHistory';
 import Table from '../grid/Table';
@@ -14,11 +13,10 @@ const columns = {
   Active: 'Active'
 };
 
-function History ({ slug }) {
+function History ({ slug, history: browserHistory }) {
   // More reicent recards are better.
   const [sort, setSort] = useState({ column: 'Date', assending: false });
 
-  const browserHistory = useReactRouterHistory();
   const { history: { data = [], historyFetching, error }, loadHistory } = useHistory();
 
   useEffect(() => {
@@ -67,7 +65,7 @@ function History ({ slug }) {
             onSort={handleSort}
             sort={sort}
           />
-          <input type='button' value='X' onClick={handleClick} />
+          <input data-testid='close-button' type='button' value='X' onClick={handleClick} />
         </div>}
     </div>
   );

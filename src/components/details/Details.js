@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useHistory as useReactRouterHistory } from 'react-router-dom';
+// import { useHistory as useReactRouterHistory } from 'react-router-dom';
 import { isNil } from 'ramda';
 import './Details.css';
 
@@ -16,12 +16,13 @@ const toDisplayName = (str = '') => {
   return [first, ...restWithSpaces].join('');
 };
 
-function Details ({ details, country }) {
-  const browserHistory = useReactRouterHistory();
+function Details ({ details, history }) {
+  // const browserHistory = useReactRouterHistory();
 
   const handleClick = useCallback(slug => e => {
-    browserHistory.push(`/history/${slug}`);
-  }, [browserHistory]);
+    // browserHistory.push(`/history/${slug}`);
+    history.push(`/history/${slug}`);
+  }, [history]);
 
   // We still want this for place holder
   if (isNil(details)) return (<div id='details' />);
