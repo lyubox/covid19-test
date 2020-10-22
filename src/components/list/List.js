@@ -14,7 +14,8 @@ function List () {
   const [isBtnClicked, setBtnClicked] = useState(!isNil(module));
 
   const { summary } = useSummary();
-  const { history } = useHistory();
+  const history = useHistory();
+
   const location = useLocation();
 
   const summaryBySlug = useMemo(() =>

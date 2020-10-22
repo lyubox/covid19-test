@@ -1,4 +1,4 @@
-import { isNil, sortBy, prop } from 'ramda';
+import { sortBy, prop } from 'ramda';
 
 export const sortSymbol = (column, sort) =>
   column !== sort.column

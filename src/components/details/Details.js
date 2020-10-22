@@ -17,10 +17,7 @@ const toDisplayName = (str = '') => {
 };
 
 function Details ({ details, history }) {
-  // const browserHistory = useReactRouterHistory();
-
   const handleClick = useCallback(slug => e => {
-    // browserHistory.push(`/history/${slug}`);
     history.push(`/history/${slug}`);
   }, [history]);
 
