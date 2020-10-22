@@ -3,17 +3,15 @@ import { isNil, sortBy, prop } from 'ramda';
 export const sortSymbol = (column, sort) =>
   column !== sort.column
     ? ''
-    : sort.assending ? '▼' : '▲';
+    : sort.ascending ? '▼' : '▲';
 
-export const parseDate = (dateText) => {
+export const parseDate = (dateText = '') => {
   const [date] = dateText.split('T');
 
-  return isNil(date)
-    ? ''
-    : date;
+  return date;
 };
 
-export const sortList = ({ column, assending }, list = []) =>
-  assending
+export const sortList = ({ column, ascending }, list = []) =>
+  ascending
     ? sortBy(prop(column))(list)
     : sortBy(prop(column))(list).reverse();

@@ -15,7 +15,7 @@ const columns = {
 
 function History ({ slug, history: browserHistory }) {
   // More reicent recards are better.
-  const [sort, setSort] = useState({ column: 'Date', assending: false });
+  const [sort, setSort] = useState({ column: 'Date', ascending: false });
 
   const { history: { data = [], historyFetching, error }, loadHistory } = useHistory();
 
@@ -26,8 +26,8 @@ function History ({ slug, history: browserHistory }) {
   const handleSort = useCallback(column => e => {
     setSort(oldSort =>
       column === oldSort.column
-        ? { column, assending: !oldSort.assending }
-        : { column, assending: true }
+        ? { column, ascending: !oldSort.ascending }
+        : { column, ascending: true }
     );
   }, []);
 

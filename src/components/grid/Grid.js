@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import './Grid.css';
 import { isNil, isEmpty, prop } from 'ramda';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Table from './Table';
 import Fuse from 'fuse.js';
 import { sortList } from '../../core';
@@ -14,15 +14,16 @@ const columns = {
 };
 
 export default function Grid ({
-  summary
+  summary,
+  location
 }) {
   // use query-string if it gets more complicated
-  const { search } = useLocation();
+  const { search } = location;
   const [, q] = search.split('=');
   // end query-string need
 
   const [query, setQuery] = useState(q || '');
-  const [sort, setSort] = useState({ column: 'Country', assending: true });
+  const [sort, setSort] = useState({ column: 'Country', ascending: true });
 
   const history = useHistory();
 
@@ -55,8 +56,8 @@ export default function Grid ({
   const handleSort = useCallback(column => e => {
     setSort(oldSort =>
       column === oldSort.column
-        ? { column, assending: !oldSort.assending }
-        : { column, assending: true }
+        ? { column, ascending: !oldSort.ascending }
+        : { column, ascending: true }
     );
   }, []);
 
@@ -76,38 +77,6 @@ export default function Grid ({
         onSort={handleSort}
         sort={sort}
       />
-      {/*
-      <div id='table-wrapper'>
-        <table id='table-header'>
-          <thead>
-            <tr>
-              {Object.entries(columns).map(([key, name]) =>
-                (<th
-                  className='headers'
-                  key={key}
-                  onClick={handleSort(key)}
-                >
-                  {name}
-                  {sortSymbol(key, sort)}
-                </th>))}
-            </tr>
-          </thead>
-        </table>
-        <div id='table-scroll'>
-          <table id='data'>
-            <tbody>
-              {filteredList.map((row, index) =>
-                (<Row
-                  data={row}
-                  key={index}
-                  onClick={handleClick(index, row.Slug, query)}
-                />)
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      */}
     </div>
   );
 }

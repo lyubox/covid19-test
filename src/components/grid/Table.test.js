@@ -21,14 +21,14 @@ describe('Table', () => {
   const onSort = col => () => sortFnMock(col);
   const onClick = (index, slug, query) => () => clickFnMock(index, slug, query);
 
-  const sort = { column: 'col1', assending: true };
+  const sort = { column: 'col1', ascending: true };
 
   beforeEach(() => {
     sortFnMock.mockClear();
     clickFnMock.mockClear();
   });
 
-  test('Shows data', () => {
+  test('Shows data and events fire', () => {
     render(
       <Table
         id='test'
@@ -60,4 +60,6 @@ describe('Table', () => {
     expect(slug).toBe(5555);
     expect(queryText).toBe('test');
   });
+
+  // ...
 });

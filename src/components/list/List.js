@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 import { indexBy, prop, isNil } from 'ramda';
 import useSummary from './useSummary';
 import Grid from '../grid/Grid';
@@ -15,13 +15,11 @@ function List () {
 
   const { summary } = useSummary();
   const { history } = useHistory();
+  const location = useLocation();
 
   const summaryBySlug = useMemo(() =>
     indexBy(prop('Slug'))(summary)
   , [summary]);
-
-  // first element is empty
-  // const [_, module] = path.split('/');
 
   const showHistory = module === 'history';
 
@@ -40,7 +38,10 @@ function List () {
         </div>}
       {isBtnClicked &&
         <div id='list-wrapper'>
-          <Grid summary={summary} />
+          <Grid
+            summary={summary}
+            location={location}
+          />
           <Details
             details={summaryBySlug[country]}
             history={history}

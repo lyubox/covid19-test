@@ -59,4 +59,19 @@ describe('History', () => {
       expect(history.goBack.mock.calls.length).toBe(1);
     });
   });
+
+  test('Should show error', async () => {
+    fetchFn.mockReturnValueOnce(
+      Promise.reject(new Error('Yada yada'))
+    );
+
+    render(
+      <Provider store={store}>
+        <History slug='bulgaria' history={history} />
+      </Provider>);
+
+    await waitFor(() => {
+      screen.getByText('There was a problem loading history for bulgaria!');
+    });
+  });
 });
