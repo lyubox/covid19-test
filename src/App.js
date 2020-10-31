@@ -1,23 +1,22 @@
 import React from 'react';
 import './App.css';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch
-} from 'react-router-dom';
-import List from './components/list/List';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import makeStore from './state';
+import List from './components/List';
 // import './App.css';
 
-function App () {
+function App() {
+  const { context, initState } = makeStore();
+
   return (
-    <Router>
-      <div>
+    <context.Provider value={initState}>
+      <Router>
         <Switch>
-          <Route exact path='/' children={<List />} />
-          <Route path='/:module/:country' children={<List />} />
+          <Route exact path="/" children={<List />} />
+          <Route path="/:module/:country" children={<List />} />
         </Switch>
-      </div>
-    </Router>
+      </Router>
+    </context.Provider>
   );
 }
 
