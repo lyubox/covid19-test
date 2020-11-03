@@ -1,6 +1,5 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import store from '../../redux/store';
 import History from './History';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
@@ -26,9 +25,8 @@ describe('History', () => {
 
   test('Lists history data if the server returns responce', async () => {
     render(
-      <Provider store={store}>
-        <History slug='bulgaria' history={history} />
-      </Provider>);
+      <History slug='bulgaria' history={history} />
+    );
 
     await waitFor(() => {
       // The title
@@ -47,9 +45,8 @@ describe('History', () => {
 
   test('Close button will get us back', async () => {
     render(
-      <Provider store={store}>
-        <History slug='bulgaria' history={history} />
-      </Provider>);
+      <History slug='bulgaria' history={history} />
+    );
 
     await waitFor(() => {
       const button = screen.getByText('X');
@@ -66,9 +63,8 @@ describe('History', () => {
     );
 
     render(
-      <Provider store={store}>
-        <History slug='bulgaria' history={history} />
-      </Provider>);
+      <History slug='bulgaria' history={history} />
+    );
 
     await waitFor(() => {
       screen.getByText('There was a problem loading history for bulgaria!');

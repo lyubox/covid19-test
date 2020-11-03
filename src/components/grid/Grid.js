@@ -2,7 +2,7 @@ import React, { useMemo, useState, useCallback } from 'react';
 import './Grid.css';
 import { isNil, isEmpty, prop } from 'ramda';
 import { useHistory } from 'react-router-dom';
-import Table from './Table';
+import Table from '../Table';
 import Fuse from 'fuse.js';
 import { sortList } from '../../core';
 
@@ -13,7 +13,7 @@ const columns = {
   NewRecovered: 'New Recovered'
 };
 
-export default function Grid ({
+function Grid ({
   summary,
   location
 }) {
@@ -80,3 +80,5 @@ export default function Grid ({
     </div>
   );
 }
+
+export default React.memo(Grid);

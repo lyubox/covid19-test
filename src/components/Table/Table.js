@@ -3,7 +3,7 @@ import './Table.css';
 import { prop, isNil } from 'ramda';
 import { sortSymbol } from '../../core';
 
-function Row ({ columns, data, onClick }) {
+const Row = React.memo(({ columns, data, onClick }) => {
   const [country, ...rest] = Object.keys(columns);
   return (
     <tr
@@ -15,7 +15,7 @@ function Row ({ columns, data, onClick }) {
       {rest.map((column, index) => <td className='rightAligned' key={index}>{data[column] || ''}</td>)}
     </tr>
   );
-}
+});
 
 function Table ({
   id,
@@ -62,4 +62,4 @@ function Table ({
   );
 }
 
-export default Table;
+export default React.memo(Table);

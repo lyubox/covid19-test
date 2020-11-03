@@ -1,17 +1,18 @@
-import React, { useContext, useMemo, useState } from 'react';
-import { countryInitState } from './country';
-import { historyInitState } from './history';
+import { useState } from 'react';
 
-const initState = {
-  country: countryInitState,
-  history: historyInitState
-};
+export default function useStore () {
+  const [state, setState] = useState({
+    country: {
+      summary: {},
+      fetching: false,
+      error: ''
+    },
+    history: {
+      history: [],
+      fetching: false,
+      error: ''
+    }
+  });
 
-export default function useStore() {
-  const [state, setState] = useState(initState);
-  const context = useMemo(() => React.createContext([state, setState]), []);
-
-  const useStore = () => useContext(context);
-
-  return { context, initState, useStore };
+  return { state, setState };
 }

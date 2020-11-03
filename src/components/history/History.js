@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import './History.css';
-import useHistory from './useHistory';
-import Table from '../grid/Table';
+import useHistory from '../../state/useHistory';
+import Table from '../Table';
 import { isNil } from 'ramda';
 import { parseDate, sortList } from '../../core';
 
@@ -17,11 +17,11 @@ function History ({ slug, history: browserHistory }) {
   // More reicent recards are better.
   const [sort, setSort] = useState({ column: 'Date', ascending: false });
 
-  const { history: { data = [], historyFetching, error }, loadHistory } = useHistory();
+  const { historyState: { history = [], fetching, error }, loadHistory } = useHistory();
 
   useEffect(() => {
     if (!isNil(slug)) loadHistory(slug);
-  }, [slug, loadHistory]);
+  }, [slug]);
 
   const handleSort = useCallback(column => e => {
     setSort(oldSort =>
@@ -37,25 +37,25 @@ function History ({ slug, history: browserHistory }) {
 
   // Let's preformat the date and sort it.
   const list = useMemo(() => {
-    if (isNil(data)) return [];
+    if (isNil(history)) return [];
 
-    const dateFormated = data.map(({ Date: dateText, ...rest }) =>
+    const dateFormated = history.map(({ Date: dateText, ...rest }) =>
       ({ ...rest, Date: parseDate(dateText) }));
 
     return sortList(sort, dateFormated);
-  }, [data, sort]);
+  }, [history, sort]);
 
   const country = useMemo(() => {
-    const [first] = data;
+    const [first] = history;
     return isNil(first) ? '' : first.Country;
-  }, [data]);
+  }, [history]);
 
   return (
     <div id='history'>
       {/* Fansy loader here */}
-      {historyFetching && <div className='loader'>Loading...</div>}
+      {fetching && <div className='loader'>Loading...</div>}
       <div>{error}</div>
-      {historyFetching ||
+      {fetching ||
         <div>
           <h1>{country}</h1>
           <Table
@@ -65,10 +65,10 @@ function History ({ slug, history: browserHistory }) {
             onSort={handleSort}
             sort={sort}
           />
-          <input data-testid='close-button' type='button' value='X' onClick={handleClick} />
+          <input history-testid='close-button' type='button' value='X' onClick={handleClick} />
         </div>}
     </div>
   );
 }
 
-export default History;
+export default React.memo(History);
