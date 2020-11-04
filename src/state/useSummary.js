@@ -3,45 +3,31 @@ import useStore from './store';
 import { getSummary } from '../service';
 
 export default function useSummary () {
-  const { state, setState } = useStore();
+  const { state, editState } = useStore();
 
+  const edit = editState('country');
   const countryState = useMemo(() => state.country, [state.country]);
 
   const request = useCallback(() => {
     console.log('Request');
-
-    setState((old) => ({
-      ...old,
-      country: {
-        ...countryState,
-        fetching: true
-      }
-    }));
-  }, [countryState, setState]);
+    edit({ fetching: true });
+  }, [edit]);
 
   const success = useCallback((summary) => {
     console.log('Success');
-    setState((old) => ({
-      ...old,
-      country: {
-        ...countryState,
-        summary,
-        fetching: false
-      }
-    }));
-  }, [countryState, setState]);
+    edit({
+      summary,
+      fetching: false
+    });
+  }, [edit]);
 
   const failure = useCallback((error) => {
     console.log('Failure');
-    setState((old) => ({
-      ...old,
-      country: {
-        ...countryState,
-        error,
-        fetching: false
-      }
-    }));
-  }, [countryState, setState]);
+    edit({
+      error,
+      fetching: false
+    });
+  }, [edit]);
 
   const loadSummaryList = useCallback(() => {
     request();

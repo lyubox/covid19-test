@@ -3,45 +3,31 @@ import useStore from './store';
 import { getHistory } from '../service';
 
 export default function useHistoryState () {
-  const { state, setState } = useStore();
+  const { state, editState } = useStore();
 
+  const edit = editState('history');
   const historyState = useMemo(() => state.history, [state.history]);
 
   const request = useCallback(() => {
     console.log('Request');
-
-    setState((old) => ({
-      ...old,
-      history: {
-        ...historyState,
-        fetching: true
-      }
-    }));
-  }, [historyState, setState]);
+    edit({ fetching: true });
+  }, [edit]);
 
   const success = useCallback((history) => {
     console.log('Success');
-    setState((old) => ({
-      ...old,
-      history: {
-        ...historyState,
-        history,
-        fetching: false
-      }
-    }));
-  }, [historyState, setState]);
+    edit({
+      history,
+      fetching: false
+    });
+  }, [edit]);
 
   const failure = useCallback((error) => {
     console.log('Failure');
-    setState((old) => ({
-      ...old,
-      history: {
-        ...historyState,
-        error,
-        fetching: false
-      }
-    }));
-  }, [historyState, setState]);
+    edit({
+      error,
+      fetching: false
+    });
+  }, [edit]);
 
   const loadHistory = useCallback((slug) => {
     request();
