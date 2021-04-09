@@ -1,9 +1,11 @@
-const request = () => ({ type: 'request'})
-const success = payload => ({type: 'success', payload})
-const failure = payload => ({type: 'failure', payload})
+const request = () => ({ type: 'REQUEST'})
+const success = payload => ({type: 'SUCCESS', payload})
+const update = () => ({type: 'UPDATE' })
+const failure = payload => ({type: 'FAILURE', payload})
 
 export {
 	request,
 	success,
+	update,
 	failure
 }

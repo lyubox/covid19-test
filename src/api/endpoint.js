@@ -11,3 +11,10 @@ export const get = (path, params) =>
     ...params,
     method: 'GET'
   });
+
+export const post = (path, params) => {
+  api(path, {
+    ...params,
+    method: 'POST'
+  })
+}

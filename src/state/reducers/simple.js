@@ -12,6 +12,10 @@ const reducer = entity => (state, action) => {
       fetching: false,
       error: ''
     }),
+    update: () => edit({
+      fetching: false,
+      error: ''
+    }),
     failure: () => edit({
       error: payload,
       fetching: false
@@ -19,7 +23,7 @@ const reducer = entity => (state, action) => {
   }
 
   const defaultFn = () => state
-  const actionFn = actions[type] || defaultFn
+  const actionFn = actions[type.toLowerCase()] || defaultFn
 
   return actionFn()
 }

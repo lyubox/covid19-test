@@ -1,7 +1,7 @@
-import { success, request, failure} from '../actions/simple'
+import { success, request, failure, update} from '../actions/simple'
 import { StateContext } from '../context'
 import { useCallback, useContext } from 'react'
-import { getHistory } from '../../api/service'
+import { getHistory, postHistory } from '../../api/service'
 
 const useAsyncActions = () => {
 	const { dispatchHistory: dispatch } = useContext(StateContext)
@@ -16,8 +16,17 @@ const useAsyncActions = () => {
 
 // post, put, delete ...
 
+	const saveHistory = history => {
+		dispatch(request())
+
+		return postHistory(history)
+			.then(r => dispatch(update()))
+			.catch(err => dispatch(failure(err.message)))
+	}
+
 	return {
-		loadHistory
+		loadHistory,
+		saveHistory
 	}
 }
 
